@@ -8,10 +8,10 @@ u16 _D[DATA_SIZE];
 // address (kind of name) of above data, may be anything
 #define VIRTUAL_ADDRESS 0x0000
 
-#define OUR_ID_AS_A_SLAVE 2
-#define PIN_CONNECTED_TO_BOTH_DE_AND_RE 13
+#define SLAVE_ID 2
+#define DE_RE_PIN 13
 
-ModbusRTUSlave rtu(OUR_ID_AS_A_SLAVE, &Serial, PIN_CONNECTED_TO_BOTH_DE_AND_RE);
+ModbusRTUSlave rtu(SLAVE_ID, &Serial, DE_RE_PIN);
 
 void setup()
 { 
