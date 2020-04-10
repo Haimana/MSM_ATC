@@ -1,0 +1,31 @@
+'********DO NOT remove or change the expand line or the included file contents******************
+'  MachStdMIll license terms REQUIRE that the copyright and License terms remain a part of this source file
+#expand <Masters\Headers\CopyRightAndLicenseNotice>	
+'**************************************************************************************
+' this header file defines the user space objects whcih are used to implement paramter passing to Runscript for the MSMAPI calls.
+' ***** DO NOT EVER USE ANY OF THESE CONSTANTS AS MAGIC NUMBERS
+' ***** ONLY REFR TO THESE BY NAME!
+'  The contant values may change from release to release but the names will stay the same....
+
+' User space labels used to implement RunScript string parameters
+Const MSMAPIUserLabelBase = 170
+Const MSMVersionUserLabel					= MSMAPIUserLabelBase + 7
+Const MSMAPIRSStringParam1UserLabel				= MSMAPIUserLabelBase + 10
+Const MSMAPIRSStringParam2UserLabel				= MSMAPIUserLabelBase + 11
+Const MSMAPIRSStringParam3UserLabel				= MSMAPIUserLabelBase + 12
+Const MSMAPIRSStringParam4UserLabel				= MSMAPIUserLabelBase + 13
+Const MSMAPIRSStringParam5UserLabel				= MSMAPIUserLabelBase + 14
+
+' User space labels used to implement RunScript numeric and boolean parameters
+Const MSMAPIDROBase = 1700
+Const MSMVersionMajorDRO				= MSMAPIDROBase + 54
+Const MSMVersionMinorDRO				= MSMAPIDROBase + 55
+Const MSMVersionBuildDRO				= MSMAPIDROBase + 62
+
+const MSMAPIRSNumericParam1DRO			= MSMAPIDROBase + 100
+const MSMAPIRSNumericParam2DRO			= MSMAPIDROBase + 101
+const MSMAPIRSNumericParam3DRO			= MSMAPIDROBase + 102
+const MSMAPIRSNumericParam4DRO			= MSMAPIDROBase + 103
+const MSMAPIRSNumericParam5DRO			= MSMAPIDROBase + 104
+const MSMAPIRSReturnValueDRO			= MSMAPIDROBase + 105
+

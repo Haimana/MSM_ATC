@@ -1,0 +1,10 @@
+rem #define ACTIVATION1  18
+rem #define ACTIVATION2  19
+rem #define ACTIVATION3  20
+rem #define ACTIVATION4  21
+rem #define DIGITIZE     22
+rem #define INDEX        23
+rem #define LIMITOVER    24
+rem #define EMERGENCY    25
+
+SystemWaitFor( 19 )
