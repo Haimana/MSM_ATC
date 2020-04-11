@@ -2,6 +2,9 @@ MSM_ATC.xml
 Brains/VFD_Readings.brn
 Brains/VfdRun.brn
 Brains/VfdSpeed.brn
+MSM_ATC.se2
+MSM_ATC.se3
+MSM_ATC.se4
 1024.set
 Addons.exe
 Addons/
