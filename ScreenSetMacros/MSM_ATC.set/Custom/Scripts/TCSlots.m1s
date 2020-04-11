@@ -1,0 +1,71 @@
+Option Explicit
+
+Dim slotno as integer
+slotno = Getvar(1100)	'slot number
+
+'nu rulam la click accidental in timpul altei operatiuni ATC
+If GetUserLED(1725) = 1 Then Exit Sub
+
+'daca slotul este dezactivat 
+If GetUserLED(1130 + slotno) = 0 Then Exit Sub
+
+'If GetOEMDRO(1100 + slotno) = GetOEMDRO(824) And GetOEMDRO(824) <> 0 Then 
+'	Message "Cannot replace Tool T" & Getoemdro(1100 + slotno) & " while is in spindle!!"
+'	Exit Sub
+'End If
+
+Dim OTS As Integer
+Dim NTS As Integer
+Dim i As Integer
+
+OTS = GetOEMDRO(1100 + slotno)
+NTS = Question("Enter New Tool For Slot " & slotno & ":")
+
+If OTS = NTS and NTS <> 0 Then 
+	Message "Requested tool is same with existing tool, exiting!"
+	Exit Sub
+End If
+
+'ignore if tool no < 0
+If NTS < 0 Then 
+	Exit Sub
+End If
+	
+Dim checktool As Integer 'verificam daca scula mai exista deja in magazie
+checktool = 0
+
+
+For i = 1101 To 1110
+	If NTS > 0 And GetUserLED(1130 + slotno) = 1 Then 	If GetOEMDRO(i) = NTS Then checktool = checktool + 1	
+Next i
+
+
+If checktool = 0 Then
+	SetOEMDRO(1100 + slotno, NTS) 
+	If NTS = 0 Then 
+			If OTS <> 0 Then Message "Tool T" & OTS & " removed. Slot " & slotno & " is now empty"
+			SetUserLED(1400 + slotno,0) 	'aprindem ledul verde - nu conteaza, fiind mascat de cel gri de mai jos								
+			SetUserLED(1600 + slotno,1)	'aprindem ledul gri, slotul este liber
+		End If		
+	If NTS > 0 Then 
+			Message "Tool T" & OTS & " replaced by Tool T" & NTS & " in Slot " & slotno
+
+			SetUserLED(1400 + slotno,0)			'aprindem ledul verde			
+			SetUserLED(1600 + slotno,0)			'stingem ledul gri
+			DoOEMButton(5)
+			
+			'extragem NRH/RH din GetToolDesc			
+			If InStr(1, GetToolDesc(NTS), "NRH") > 0 Then 
+								SetUserLED(1200 + slotno,1) 												
+			Else
+								SetUserLED(1200 + slotno,0) 															
+			End If			
+		End If						
+Else
+	Message "Error! Tool T" & NTS & " is already loaded in rack!"
+End If
+
+Exit Sub     
+
+
+
