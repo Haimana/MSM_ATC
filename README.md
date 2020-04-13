@@ -11,7 +11,7 @@
 4. If you just enabled the use of macropump you have to restart Mach3
 5. Go to MachStdMill/Settings page and press the "Load Screen" button. Load the "MSM_ATC.set" screenset from MachStdMill\Set Files\Custom folder. DO NOT LOAD this screenset directly from Mach3\View\Load Screen menu.
 6. If everything is OK you should have now a customized MachStdScreen with the USER page renamed to ATC and a modified Settings/Spindles page where ATC system have to be configured, like bellow:
-![Unconfigured ATC Page](MSM_ATC/_Doc/Images/MSM_ATC_Unconfigured.PNG)
+![Unconfigured ATC Page](_Doc/Images/MSM_ATC_Unconfigured.PNG)
 
  
 ### Configuration of MSM_ATC
