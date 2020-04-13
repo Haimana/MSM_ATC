@@ -1,3 +1,6 @@
+MSM_ATC.se6
+MSM_ATC.set0
+MachStdMill/Set Files/Custom/MSM_ATC.se6
 MachStdMill/Config/
 MachStdMill/Logs/
 MachStdMill/MSM Default Profile/
@@ -154,7 +157,6 @@ SMRL.dll
 SMTX.ocx
 Scorpion.tap
 Screen4.xml
-ScreenSetMacros/MachStdMill.set/
 ScreenSetMacros/MachStdMillLathe.Lset/
 SetupC.dll
 Setupold.bmp
