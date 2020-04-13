@@ -1,3 +1,12 @@
+MachStdMill/Config/
+MachStdMill/Logs/
+MachStdMill/MSM Default Profile/
+MachStdMill/MSM Support Libs/
+MachStdMill/Profile Macro Masters/
+MachStdMill/Proxy Activation Utility/
+MachStdMill/RealDraw/
+MachStdMill/Set Files/Custom/DO_NOT_load_MSM_set_files_via_machs_menu_view-load_screen.txt
+MachStdMill/Set Files/Masters/
 macros/MSM_ATC/Curve0.dat
 macros/MSM_ATC/Curve1.dat
 macros/MSM_ATC/Curve2.dat
@@ -122,7 +131,6 @@ Mach3Turn.xml
 Mach4.tlb
 Mach4Strings.dll
 MachStdMill.set
-MachStdMill/
 MachStdMillLathe.Lset
 MachTurn.txt
 MachXML.exe
