@@ -1,2 +1,0 @@
-a = GetVar(1000)
-     SetVar 1001, a
