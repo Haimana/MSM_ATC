@@ -1,24 +1,1 @@
-Option Explicit
-
-'nu rulam la click accidental in timpul altei operatiuni ATC
-If GetUserLED(1725) = 1 Then Exit Sub
-
-Dim OT As Integer
-Dim NT As Integer
-
-OT = GetOEMDRO(824)
-NT = Question("Enter New Tool For Spindle - M6 Tx command")
-
-'If OT = NT and NT <> 0 Then 
-'	Message "Requested tool is same with existing tool, exiting!"
-'	Exit Sub
-'End If
-
-'ignore if tool no < 0
-If NT < 1 Then 
-	Exit Sub
-End If
-
-Code "M6 T" & NT
-
-Exit Sub
+Option Explicit'nu rulam la click accidental in timpul altei operatiuni ATCIf GetUserLED(1725) = 1 Then Exit SubDim OT As IntegerDim NT As IntegerOT = GetOEMDRO(824)NT = Question("Enter New Tool Number - M6 Tx command")If OT = NT Then 	Message "Requested tool is same with existing tool, exiting!"	Exit SubEnd If'ignore if tool no < 0If NT < 1 Then 	Exit SubEnd IfCode "M6 T" & NTExit Sub
