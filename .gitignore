@@ -10,7 +10,6 @@ macros/MSM_ATC/feedrate.m1s
 macros/MSM_ATC/fixtures.dat
 macros/MSM_ATC/hiddenscript.m1s
 macros/MSM_ATC/m10.m1s
-macros/MSM_ATC/m1000.m1s
 macros/MSM_ATC/m1001.m1s
 macros/MSM_ATC/m11.m1s
 macros/MSM_ATC/m1706.m1s
