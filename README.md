@@ -36,6 +36,8 @@
 ### Slot Sensors
 - MSM_ATC can handle slot sensors. The sensors status have to be passed to OEM Trig #1 - #10 inputs. Because Mach3 alone cannot handle more than 2 parallel ports, a different way for passing slot's sensors status could be an Arduino board which communicate with Mach3 through Modbug protocol and some brains.
 - The Arduino code could be found in _Doc folder and was tested with Arduino Uno and Mega 2560. It will require a serial modbus communication device installed and configured for Mach3.
-- The schematic:  ![Arduino Schematic Diagram](_Doc/Images/Arduino_Schematic_Diagram.PNG) S1-S10 are NO switches. When tool is in slot the switch is closed.
+- The schematic:  ![Arduino Schematic Diagram](_Doc/Images/Arduino_Schematic_Diagram.PNG) S1-S10 are NO switches. When tool is in slot the switch is closed. A and B pins are connected to the Modbus. Make sure the Arduino board will be properly powered.
+- For reading slot sensors status a brain is required. I made a brain which can be found in "Brains" folder. This brain - _arduino_modbus_oemtrigs.brn - have to be enabled in Mach3/Operator/Brain Control menu.
+- If Mach3 is running with some motion controller like UCCNC which provide more inputs pins, the Ardunio board is not required. Just config OEM Trig #1 to #10 to physical inputs. The brain will not be also required.
 - 
 
