@@ -1,0 +1,26 @@
+Option Explicit
+
+Dim deactivate As Integer
+Dim areyousure As Integer
+deactivate = 0
+areyousure = 0
+
+If GetUserLED(1151) = 0 Then 
+	deactivate = MachMsg ("Set Rack on Y Axis? - RESTART MACH after change!", "Set Rack on Y Axis?", 1)				
+		If deactivate = 1 Then
+			areyousure = MachMsg ("Are you sure you want to set Rack on Y Axis? - RESTART MACH after change!", "Set Rack on Y Axis?", 1)				
+			If areyousure = 1 Then
+						SetUserLED(1151,1)
+			End If
+		End If
+Else 
+	deactivate = MachMsg ("Set Rack on X Axis? - RESTART MACH after change!", "Set Rack on X Axis?	", 1)				
+		If deactivate = 1 Then
+			areyousure = MachMsg ("Are you sure you want to set Rack on X Axis? - RESTART MACH after change!", "Set Rack on X Axis?", 1)				
+			If areyousure = 1 Then
+						SetUserLED(1151,0)
+			End If
+		End If
+End If
+DoOEMButton(61)
+
