@@ -34,7 +34,7 @@
 - Disabling a slot will also remove it's previously loaded tool. Re-enabling a slot will enable the slot as an empty slot (tool no. 0). 
 
 ### Slot Sensors
-- MSM_ATC can handle slot sensors. The sensors status have to be passed to OEM Trig #1 - #10 inputs. Because Mach3 alone cannot handle more than 2 parallel ports, a different way for passing slot's sensors status could be an Arduino board which communicate with Mach3 through Modbug protocol and some brains.
+- MSM_ATC can handle slot sensors. The sensors status have to be passed to OEM Trig #1 - #10 inputs. Because Mach3 alone cannot handle more than 2 parallel ports, a different way for passing slot's sensors status could be an Arduino board which communicate with Mach3 through Modbus protocol and some brains.
 - The Arduino code could be found in _Doc folder and was tested with Arduino Uno and Mega 2560. It will require a serial modbus communication device installed and configured for Mach3.
 - The schematic:  ![Arduino Schematic Diagram](_Doc/Images/Arduino_Schematic_Diagram.PNG) S1-S10 are NO switches. When tool is in slot the switch is closed. A and B pins are connected to the Modbus. Make sure the Arduino board will be properly powered.
 - For reading slot sensors status a brain is required. I made a brain which can be found in "Brains" folder. This brain - _arduino_modbus_oemtrigs.brn - have to be enabled in Mach3/Operator/Brain Control menu.
