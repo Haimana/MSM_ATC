@@ -17,27 +17,27 @@
 
  
 ### Configuration of MSM_ATC - Settings/Spindles Page
-- MSM_ATC is able to work with fixed racks aligned on X or Y Axis. Select the desired axis by pressing the <i>invisible</i> button which is above "Step" and "Clear" labels in Settings/Spindles page. After pressing it a confirmation dialog will ask for confirmation and the labels should switch from Step X to Step Y and from Clear Y to Clear X, or vice versa, if Y axis was previously selected.
+- MSM_ATC is able to work with fixed racks aligned on X or Y Axis. Select the desired axis in Settings/Spindles page. After changing it a  the labels should switch from Step X to Step Y and from Clear Y to Clear X, or vice versa, if Y axis was previously selected.
 - First time we have to declare the first slot's position. This is the position where the first slot's tool is load or released. Set it by filling Rack X, Rack Y and Rack Z fields. All values have to be in Machine Coordinates only!
 - If the rack is built with holding forks, the tool have to be removed from or returned to the fork by an additional movement along Y-Axis (if rack is aligned along X-Axis). The Y-Axis position from where this additional movement is starting or ending is called Clear Y (or Clear X for Y-Axis aligned rack). Set the Clear Y (or Clear X for Y-Axis aligned rack) field as an Y-Axis (or X-Axis) position where the tool can be clearly moved up or down, in front of slot's forks.
 - If this additional movement is not needed just set Clear Y (Clear X) with the same value with Rack Y (Rack X, for Y-Axis aligned rack). In this case the tool will be loaded or returned only by a vertical movement along Z-Axis. 
 -  Step X (Step Y, for X-Axis aligned rack) is the distance between each adjacent slots of the rack, along X Axis (or Y Axis).
 -  Safe Z is the Z-Axis position where the spindle is raised when ATC operations occur.
--  MSM_ATC can handle reporting status for each slot of the rack. For now, because the sensor's brain and hardware interface is not configured, we will disable this function. To disable this function we have to set the Check Z value with the same value of Rack Z. If Check Z == Rack Z, this feature is disabled and the ATC system is running in blind mode. The use of these sensors will be explained later. 
+-  MSM_ATC can handle reporting status sensors for each slot of the rack. By default, the slot sensors are disabled and the system is running in blind mode. 
 -  Empty Z - USE WITH CAUTION! - will allow the machine to move above tool holders at a different position when the spindle does not have tool loaded (when empty spindle). This is helpful for long Z-Axis machines and prevent  the return to Safe Z when the spindle is empty and can travel at a lower Z-Axis position when empty. To disable this intermediary position, just set Empty Z as the same value with Safe Z. This is also recommended for now.
 -  TC Feedrate is the speed for ATC operations.
 -  ATC Msg. Err. Level - is the level of reported ATC messages. For debugging set a higher value, like 5, which will report any ATC operation. For regular run, set this level at 1 or 2, only basic operation is reported.
--  Sensors Timeout - this is a delay used when checking for slot sensor's status. In some condition, the status is delayed and this waiting time is required. If sensors use is enabled and checked, after this delay the system report the error (if still in error condition) and give to the user the possibility to abort, recheck or ignore the sensor's status inside ATC operations.
-- Actual Air Pressure is the air pressure reported by Arduino Sensors (if available). This is a readonly value.
-- Min. Working Pressure is the minimum working pressure for properly ATC operations. If no air pressure or nor Arduino Sensors Board available, set it equal or lower (even negative values are allowed) with Actual Air Pressure.
-- Slots Management - By default all 10 slots are disabled. You have to enable all the needed (available) slots you want to use. If needed, each slot can be enabled/disabled individually.
-- Disabling a slot will also remove it's previously loaded tool. Re-enabling a slot will enable the slot as an empty slot (tool no. 0). 
+
 
 ### Slot Sensors
 - MSM_ATC can handle slot sensors. The sensors status have to be passed to OEM Trig #1 - #10 inputs. Because Mach3 alone cannot handle more than 2 parallel ports, a different way for passing slot's sensors status could be an Arduino board which communicate with Mach3 through Modbus protocol and some brains.
 - The Arduino code could be found in _Doc folder and was tested with Arduino Uno and Mega 2560. It will require a serial modbus communication device installed and configured for Mach3.
 - The schematic:  ![Arduino Schematic Diagram](_Doc/Images/Arduino_Schematic_Diagram.PNG) S1-S10 are NO switches. When tool is in slot the switch is closed. A and B pins are connected to the Modbus. Make sure the Arduino board will be properly powered.
-- For reading slot sensors status a brain is required. I made a brain which can be found in "Brains" folder. This brain - _arduino_modbus_oemtrigs.brn - have to be enabled in Mach3/Operator/Brain Control menu.
+- For reading slot sensors status a brain is required. I made a brain which can be found in "Brains" folder. This brain - arduino_modbus_oemtrigs.brn - have to be enabled in Mach3/Operator/Brain Control menu.
 - If Mach3 is running with some motion controller like UCCNC which provide more inputs pins, the Ardunio board is not required. Just config OEM Trig #1 to #10 to physical inputs. The brain will not be also required.
-- 
-
+- CheckZ (and CheckY/CheckX, soon) is an additional position where the system is checking and waiting for slot's status (have tool in it, have no tool). These additional positions depends on the rack's design. For a simple rack like this ![Simple Rack](_Doc/Images/Werkzeugmagazin_0.jpg) where toolholders can be loaded or retrieved by a vertical movement, the CheckZ position should be few milimeters above RackZ.
+- Sensors Timeout - this is a delay used when checking for slot sensor's status. In some condition, the status is delayed and this waiting time is required. If sensors use is enabled and checked, after this delay the system report the error (if still in error condition) and give to the user the possibility to abort, recheck or ignore the sensor's status inside ATC operations.
+- Actual Air Pressure is the air pressure reported by Arduino Sensors (if available). This is a readonly value.
+- Min. Working Pressure is the minimum working pressure for properly ATC operations. If no air pressure or nor Arduino Sensors Board available, set it equal or lower (even negative values are allowed) with Actual Air Pressure.
+- Slots Management - By default all 10 slots are disabled. You have to enable all the needed (available) slots you want to use. If needed, each slot can be enabled/disabled individually.
+- Disabling a slot will also remove it's previously loaded tool. Re-enabling a slot will enable the slot as an empty slot (tool no. 0). 

@@ -10,7 +10,8 @@ If GetUserLED(1151) = 0 Then
 		If deactivate = 1 Then
 			areyousure = MachMsg ("Are you sure you want to set Rack on Y Axis? - RESTART MACH after change!", "Set Rack on Y Axis?", 1)				
 			If areyousure = 1 Then
-						SetUserLED(1151,1)
+				Message "ATC Setup - Rack set along Y-Axis"
+				SetUserLED(1151,1)
 			End If
 		End If
 Else 
@@ -18,7 +19,8 @@ Else
 		If deactivate = 1 Then
 			areyousure = MachMsg ("Are you sure you want to set Rack on X Axis? - RESTART MACH after change!", "Set Rack on X Axis?", 1)				
 			If areyousure = 1 Then
-						SetUserLED(1151,0)
+				Message "ATC Setup - Rack set along X-Axis"
+				SetUserLED(1151,0)
 			End If
 		End If
 End If
