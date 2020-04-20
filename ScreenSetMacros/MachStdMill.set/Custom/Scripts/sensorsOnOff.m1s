@@ -1,0 +1,28 @@
+Option Explicit
+
+Dim deactivate As Integer
+Dim areyousure As Integer
+deactivate = 0
+areyousure = 0
+
+If GetUserLED(1152) = 0 Then 
+	deactivate = MachMsg ("Enable Slot Sensors?", "Turn Slot Sensors ON?", 1)				
+		If deactivate = 1 Then
+			areyousure = MachMsg ("Are you sure you want to enable Slot Sensors?", "Turn Slot Sensors ON?", 1)				
+			If areyousure = 1 Then
+				Message "ATC Setup - Slot Sensors Enabled!"
+				SetUserLED(1152,1)
+			End If
+		End If
+Else 
+	deactivate = MachMsg ("Disable Slot Sensors?", "Turn Slot Sensors OFF?", 1)				
+		If deactivate = 1 Then
+			areyousure = MachMsg ("Are you sure you want to disable Slot Sensors?", "Turn Slot Sensors OFF?", 1)				
+			If areyousure = 1 Then
+				Message "ATC Setup - Slot Sensors Disabled!"
+				SetUserLED(1152,0)
+			End If
+		End If
+End If
+DoOEMButton(61)
+
