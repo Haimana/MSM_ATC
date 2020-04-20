@@ -24,5 +24,5 @@ Else
 			End If
 		End If
 End If
-DoOEMButton(61)
 
+exit sub
