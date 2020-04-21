@@ -6,7 +6,7 @@
 - Home Switches enabled - it is mandatory to have the machine referenced when using ATC system.
 
 1. Download MSM_ATC from here - https://github.com/Haimana/MSM_ATC
-2. Extract all files and folders inside your Mach3 installation directory and overwrite all existing files. Some of the needed ATC macros - <i>like M6ATC.m1s, macropump.m1s and so on</i> - will be placed in "macros\MSM_ATC" folder. Move all files found inside this folder into your "macros/DEFAULT_FOLDER_NAME". It is mandatory to copy at least <i>M6ATC.m1s and macropump.m1s</i> to your "macros/DEFAULT_FOLDER_NAME". In the same directory "MSM_ATC" you will find more files: <i>M606, M1000 and Modbus.cfg</i>. These files will be explaind later, for now are not required.
+2. Extract all files and folders inside your Mach3 installation directory and overwrite all existing files. Some of the needed ATC macros - <i>like M6ATC.m1s, macropump.m1s and so on</i> - will be placed in "macros\MSM_ATC" folder. Move all files found inside this folder into your "macros/profile_folder". It is mandatory to copy at least <i>M6ATC.m1s and macropump.m1s</i> to your "macros/profile_folder". In the same directory "MSM_ATC" you will find more files: <i>M606, M1000 and Modbus.cfg</i>. These files will be explaind later, for now are not required.
 3. Start Mach3 and make sure you have "Auto Tool Changer" option selected and "Run Macro Pump" option is enabled. 
 4. If you just enabled the use of macropump you have to restart Mach3
 5. Go to MachStdMill/Settings page and press the "Load Screen" button. Load the "MSM_ATC.set" screenset from MachStdMill\Set Files\Custom folder. DO NOT LOAD this screenset directly from Mach3\View\Load Screen menu.
@@ -16,7 +16,8 @@
 ![Unconfigured ATC Settings Page](_Doc/Images/MSM_ATC_Settings_Unconfigured.PNG)
 
  
-### Configuration of MSM_ATC - Settings/Spindles Page
+### Configuration of MSM_ATC
+- Access ATC settings page by clicking on the "ATC Management" label located at the right-upper side of ATC Page
 - MSM_ATC is able to work with fixed racks aligned on X or Y Axis. Select the desired axis in Settings/Spindles page. After changing it a  the labels should switch from Step X to Step Y and from Clear Y to Clear X, or vice versa, if Y axis was previously selected.
 - First time we have to declare the first slot's position. This is the position where the first slot's tool is load or released. Set it by filling Rack X, Rack Y and Rack Z fields. All values have to be in Machine Coordinates only!
 - If the rack is built with holding forks, the tool have to be removed from or returned to the fork by an additional movement along Y-Axis (if rack is aligned along X-Axis). The Y-Axis position from where this additional movement is starting or ending is called Clear Y (or Clear X for Y-Axis aligned rack). Set the Clear Y (or Clear X for Y-Axis aligned rack) field as an Y-Axis (or X-Axis) position where the tool can be clearly moved up or down, in front of slot's forks.
