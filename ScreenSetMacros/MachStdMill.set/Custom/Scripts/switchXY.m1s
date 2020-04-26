@@ -1,5 +1,8 @@
 Option Explicit
 
+'nu rulam la click accidental in timpul altei operatiuni ATC
+If GetUserLED(1725) = 1 Then Exit Sub
+
 Dim deactivate As Integer
 Dim areyousure As Integer
 deactivate = 0
