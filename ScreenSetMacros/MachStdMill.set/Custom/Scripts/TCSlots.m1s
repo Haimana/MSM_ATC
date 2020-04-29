@@ -60,6 +60,9 @@ If checktool = 0 Then
 			Else
 								SetUserLED(1200 + slotno,0) 															
 			End If			
+		
+			'setam scula in campul de editare a sculei 
+			setoemdro(1729,NTS)		'setare scula in camp editare ptr tool table
 		End If						
 Else
 	Message "ATC Setup - Error! Tool T" & NTS & " is already loaded in rack!"
