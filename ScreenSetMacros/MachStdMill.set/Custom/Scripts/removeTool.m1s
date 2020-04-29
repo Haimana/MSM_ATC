@@ -1,0 +1,40 @@
+Option Explicit
+If(GetOEMLED(800)) Then ' MACH is at RESET condition
+		Message("System is at ESTOP - Tool Change terminated")
+		Sleep(150)
+		'WaitForMove
+		End
+End If
+	
+'nu rulam la click accidental in timpul altei operatiuni ATC
+If GetUserLED(1725) = 1 Then Exit Sub
+
+Dim R As Integer
+Dim oldtool As Integer
+'Dim slot As Integer
+'slot = 0
+'selfslot = 0
+
+oldtool = GetOEMDRO(824)
+'If oldtool > 0 Then R = MachMsg ("Remove tool T" & oldtool & " from spindle and rack?","Warning!",1)
+If oldtool > 0 Then R = MachMsg ("Remove tool T" & oldtool & " from spindle?","Warning!",1)
+
+If oldtool > 0 And R = 1 Then
+	'For slot = 1101 To 1110
+	'	If GetOEMDRO(slot) = GetOEMDRO(824) Then 
+	'		SetOEMDRO(slot, 0)
+	'		SetOEMDRO(824,0)
+	'		'SetOEMDRO(1824,0)
+	'		SetUserLED(slot+300,0) 	'aprindem ledul verde - nu conteaza, fiind mascat de cel gri de mai jos								
+	'		SetUserLED(slot+500,1)	'aprindem ledul gri, slotul este liber											
+	'		SetUserLED(1905,0)	
+	'		'Code "M6 T0"
+	'		Message "Tool T" & oldtool & " removed from spindle and freeing Slot " & slot - 1100
+	'	End If
+	'Next slot
+	SetOEMDRO(824,0)
+	SetUserLED(1905,0)	
+	Message "ATC - Tool T" & oldtool & " manually removed from spindle"	'	SetOEMDRO(1824,0)
+End If 
+       
+

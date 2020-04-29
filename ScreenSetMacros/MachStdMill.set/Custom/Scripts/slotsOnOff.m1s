@@ -1,0 +1,2 @@
+Option Explicit'nu rulam la click accidental in timpul altei operatiuni ATCIf GetUserLED(1725) = 1 Then Exit SubDim slotno as integerslotno = Getvar(1101)	'slot numberDim deactivate As Integerdeactivate = 0If GetUserLED(1130 + slotno) = 0 Then 	SetUserLED(1130 + slotno,1) Else 	deactivate = MachMsg ("ATC Setup - Disable Slot " & slotno & "?", "Disable Slot " & slotno & "?", 1)					If deactivate = 1 Then						SetUserLED(1130 + slotno,0)						SetUserDRO(1100 + slotno, 0)		End IfEnd If'reload ATC Settings PageDoOEMButton(62)
+Exit Sub
