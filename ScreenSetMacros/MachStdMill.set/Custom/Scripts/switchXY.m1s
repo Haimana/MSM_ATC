@@ -28,4 +28,6 @@ Else
 		End If
 End If
 
-exit sub
+Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+
+Exit Sub

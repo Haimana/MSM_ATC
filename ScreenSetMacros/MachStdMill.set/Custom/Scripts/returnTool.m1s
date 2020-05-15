@@ -13,4 +13,7 @@ Dim oldtool As Integer
 oldtool = GetOEMDRO(824)
 	If oldtool > 0 Then R = MachMsg ("Return tool T" & oldtool & " to rack?","Warning!",1)
 	If oldtool > 0 And R = 1 Then Code "M6 T0"
+
+Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+
 Exit Sub  

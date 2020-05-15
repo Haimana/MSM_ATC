@@ -1,3 +1,11 @@
+1024.se1
+Aqua.*
+Aqua_ATC.xml
+Bitmaps/Aqua/
+Brains/Offset LEDs.brn
+Brains/Spindle OR LED.brn
+SS-Messages.txt
+macros/Aqua_ATC/
 ScreenSetMacros/MachStdMill.set/Custom/Scripts/bkp/
 MachStdMill/Mill_ToolTable_Report.txt
 Mach1Lic.dat

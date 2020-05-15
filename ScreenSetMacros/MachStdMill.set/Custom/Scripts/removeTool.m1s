@@ -37,4 +37,6 @@ If oldtool > 0 And R = 1 Then
 	Message "ATC - Tool T" & oldtool & " manually removed from spindle"	'	SetOEMDRO(1824,0)
 End If 
        
+Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
 
+Exit Sub
