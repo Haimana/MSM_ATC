@@ -1,7 +1,7 @@
 'nu rulam la click accidental in timpul altei operatiuni ATC
 If GetUserLED(1725) = 1 Then Exit Sub
 
-If GetOEMDRO(824) = 0 Then Exit Sub
+'If GetOEMDRO(824) = 0 Then Exit Sub
 
 If  GetOEMLed(807) And  GetOemLED(808) And  GetOemLed(809) And  GetOemled(810) Then
 	MsgBox "Machine NOT referenced! Aborting!"
@@ -14,6 +14,6 @@ oldtool = GetOEMDRO(824)
 	If oldtool > 0 Then R = MachMsg ("Return tool T" & oldtool & " to rack?","Warning!",1)
 	If oldtool > 0 And R = 1 Then Code "M6 T0"
 
-Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
-
+'Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+	
 Exit Sub  

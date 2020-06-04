@@ -1,0 +1,3 @@
+'Macro for IJmode to incremental
+
+SetIJMode( 1 )

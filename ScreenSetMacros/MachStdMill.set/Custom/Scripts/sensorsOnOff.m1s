@@ -30,7 +30,6 @@ End If
 
 'reload ATC Settings Page
 DoOEMButton(62)
-
-Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+'Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
 
 Exit Sub

@@ -1,0 +1,49 @@
+Option Explicit
+Dim s As Integer
+For s = 1101 To 1110
+	If getuserled(s+30) = 1 Then	'daca slotul este activat
+	
+		setuserled(s+40,0)	'grey, slot enabled
+		
+		If getoemdro(s) = getoemdro(824) And getoemdro(s) <> 0 Then 
+			setuserled(s+300,1)	'orange, tool in spindle
+			setuserled(s+500,0)	'slot not free
+		End If
+		
+		If getoemdro(s) <> getoemdro(824) And getoemdro(s) <> 0 Then 
+			setuserled(s+300,0)	'green, tool NOT in spindle
+			setuserled(s+500,0)	'slot not free
+		End If
+		
+		If getoemdro(s) = 0 Then 
+			setuserled(s+300,0)	'grey, tool NOT in slot
+			setuserled(s+500,1)	'slot free
+		End If
+	
+		If InStr(1, GetToolDesc(getoemdro(s)), "NRH") > 0 Then 
+			setuserled(s+100,1)	'turn off NRH led
+		Else
+			setuserled(s+100,0)	'turn on NRH led
+		End If
+	
+'		'citim inputurile oem si stabilim starea ledurilor in interfata - ocuparea sloturilor din magazie
+'		If Not (IsActive(28+s-1100)) And GetUserLED(1152) <> 0 Then 'And getoemdro(1920) <> getoemdro(1913) 
+'			setuserled(s+200,1)
+'		Else
+'			setuserled(s+200,0)
+'		End If
+
+'		If (getuserled(s+200) = 1 And getuserled(s+300) = 0) Or (getuserled(s+200) = 0 And getuserled(s+500) = 0) Then 
+'			setuserled(s+210,0)
+'		Else
+'			setuserled(s+210,1)
+'		End If
+		
+	Else
+		setuserled(s+500,1)	'grey, slot disabled
+		setuserled(s+40,1)	'grey, slot disabled
+	End If 	'end if daca slotul este activat
+Next s
+
+Exit Sub  
+

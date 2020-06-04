@@ -1,0 +1,947 @@
+Option Explicit
+'=== Declaraciones ===
+Dim XPOS,YPOS,Top_Mat,Depth,Rapid_dis,Feedrate,Porcentaje,Height
+Dim X1,X2,Y1,Y2,escala,corte,largo,Num,J,Codigo,Total
+
+'=== Ingresos ===
+XPOS = GetOEMDRO(1072)
+YPOS = GetOEMDRO(1073)
+Top_Mat = GetOEMDRO(1077)
+Depth = Abs(GetOEMDRO(1075))
+Rapid_dis = GetOEMDRO(1079)
+Feedrate = Abs(GetOEMDRO(1070))
+Porcentaje = GetOEMDRO(1082)
+Height = Abs(GetOEMDRO(1081))
+
+'=== Comprobaciones ===
+While Feedrate <= 0
+  Feedrate=Question ("FeedRtae can't be zero or negative, Input a right Value:")
+  Call SetUserDRO(1070, Feedrate)
+Wend
+While Porcentaje <= 0
+  Porcentaje=Question ("% Separation. can't be zero or negative, Input a right Value:")
+  Call SetUserDRO(1082, Porcentaje)
+Wend
+While Height = 0
+  Height= Question ("Height can't be zero,Input a right Value:")
+  Call SetUserDRO(1081, Height)
+Wend
+While Rapid_dis < Top_Mat
+ Rapid_dis=Qestion ("Rapid Height must be > Top Material, Input a right Value:")
+  Call SetUserDRO(1079, Rapid_dis)
+Wend
+
+'=== Escala y Direccion ===
+Escala = Height / 10
+If GetUserLED(1050) Then '0°
+  If GetUserLED(1041) Then
+    X1 = -1*Escala
+    X2 = 0
+    Y1 = 0
+    Y2 = Escala
+  Else
+    X1 = Escala
+    X2 = 0
+    Y1 = 0
+    Y2 = Escala
+  End If
+End If
+If GetUserLED(1051) Then '90°
+  If GetUserLED(1041) Then
+    X1 = 0
+    X2 = -1*Escala
+    Y1 = -1*Escala
+    Y2 = 0
+  Else
+    X1 = 0
+    X2 = -1 * Escala
+    Y1 = Escala
+    Y2 = 0
+  End If
+End If
+If GetUserLED(1052) Then '180°
+  If GetUserLED(1041) Then
+    X1 = Escala
+    X2 = 0
+    Y1 = 0
+    Y2 = -1*Escala
+  Else
+    X1 = -1 * Escala
+    X2 = 0
+    Y1 = 0
+    Y2 = -1 * Escala
+  End If
+End If
+If GetUserLED(1053) Then '270°
+  If GetUserLED(1041) Then
+    X1 = 0
+    X2 = Escala
+    Y1 = Escala
+    Y2 = 0
+  Else
+    X1 = 0
+    X2 = Escala
+    Y1 = -1 * Escala
+    Y2 = 0
+  End If
+End If
+
+'=== GCODE ===
+OpenTeachFile "write.tap"
+
+'Code ("M00")
+Code("M03 M08")
+Code ("G90")
+Corte = Top_Mat - Depth
+Code "G00 Z" & Rapid_dis
+Code "G00 G90 X" & XPOS & "Y" & YPOS
+Code "F" & Feedrate
+
+'=== Detecta Letra ===
+Total = GetVar(1500)
+For J = 1 To Total
+ Codigo = GetVar(1500 + J)
+
+'=== Escribe ===
+  Select Case Codigo
+    case  1 '1"
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.333*X1+0*X2 & " Y" & YPOS+3.333*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.666*X1+0*X2 & " Y" & YPOS+1.666*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.666*X1+10*X2 & " Y" & YPOS+1.666*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.362*X2 & " Y" & YPOS+0*Y1+8.362*Y2
+      Largo=3.333
+    case  2 '2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+3.416*X2 & " Y" & YPOS+0*Y1+3.416*Y2
+      Code "G01 X" & XPOS+1.6*X1+5*X2 & " Y" & YPOS+1.6*Y1+5*Y2
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Largo=6.687
+    case  3 '3
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.395*X1+5*X2 & " Y" & YPOS+3.395*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.241*X2 & " Y" & YPOS+6.687*Y1+3.241*Y2
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Largo=6.687
+    case  4 '4
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.373*X1+3.349*X2 & " Y" & YPOS+6.373*Y1+3.349*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+3.349*X2 & " Y" & YPOS+0*Y1+3.349*Y2
+      Code "G01 X" & XPOS+4.826*X1+10*X2 & " Y" & YPOS+4.826*Y1+10*Y2
+      Code "G01 X" & XPOS+4.826*X1+0*X2 & " Y" & YPOS+4.826*Y1+0*Y2
+      Largo=6.373
+    case  5 '5
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+6.687*X1+4.942*X2 & " Y" & YPOS+6.687*Y1+4.942*Y2
+      Code "G01 X" & XPOS+4.91*X1+6.701*X2 & " Y" & YPOS+4.91*Y1+6.701*Y2
+      Code "G01 X" & XPOS+0*X1+6.701*X2 & " Y" & YPOS+0*Y1+6.701*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  6 '6
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.241*X2 & " Y" & YPOS+6.687*Y1+3.241*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+0*X1+6.972*X2 & " Y" & YPOS+0*Y1+6.972*Y2
+      Code "G01 X" & XPOS+3.059*X1+10*X2 & " Y" & YPOS+3.059*Y1+10*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Largo=6.687
+    case  7 '7
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G01 X" & XPOS+1.7*X1+0*X2 & " Y" & YPOS+1.7*Y1+0*Y2
+      Largo=6.687
+    case  8 '8
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.777*X1+5*X2 & " Y" & YPOS+1.777*Y1+5*Y2
+      Code "G01 X" & XPOS+0*X1+6.759*X2 & " Y" & YPOS+0*Y1+6.759*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.241*X2 & " Y" & YPOS+6.687*Y1+3.241*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+0*X1+3.241*X2 & " Y" & YPOS+0*Y1+3.241*Y2
+      Code "G01 X" & XPOS+1.777*X1+5*X2 & " Y" & YPOS+1.777*Y1+5*Y2
+      Largo=6.687
+    case  9 '9
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.181*X1+0*X2 & " Y" & YPOS+3.181*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.471*X2 & " Y" & YPOS+6.687*Y1+3.471*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+0*X1+6.759*X2 & " Y" & YPOS+0*Y1+6.759*Y2
+      Code "G01 X" & XPOS+1.777*X1+5*X2 & " Y" & YPOS+1.777*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+5*X2 & " Y" & YPOS+6.687*Y1+5*Y2
+      Largo=6.687
+    case  10 '0
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.281*X1+0*X2 & " Y" & YPOS+3.281*Y1+0*Y2
+      Code "G01 X" & XPOS+4.982*X1+1.684*X2 & " Y" & YPOS+4.982*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.982*X1+8.316*X2 & " Y" & YPOS+4.982*Y1+8.316*Y2
+      Code "G01 X" & XPOS+3.281*X1+10*X2 & " Y" & YPOS+3.281*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Largo=4.982
+    case  11 'Q
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.373*X1+3.367*X2 & " Y" & YPOS+3.373*Y1+3.367*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.711*X1+0.044*X2 & " Y" & YPOS+6.711*Y1+0.044*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.345*X1+0*X2 & " Y" & YPOS+3.345*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.308*X2 & " Y" & YPOS+6.687*Y1+3.308*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Largo=6.687
+    case  12 'W
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G01 X" & XPOS+5.015*X1+5*X2 & " Y" & YPOS+5.015*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G01 X" & XPOS+10.031*X1+10*X2 & " Y" & YPOS+10.031*Y1+10*Y2
+      Largo=10.031
+    case  13 'E
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.394*X1+5*X2 & " Y" & YPOS+3.394*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  14 'R
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.732*X1+5*X2 & " Y" & YPOS+1.732*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.711*X1+0.044*X2 & " Y" & YPOS+6.711*Y1+0.044*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  15 'T
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.344*X1+10*X2 & " Y" & YPOS+3.344*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  16 'Y
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.344*X1+5*X2 & " Y" & YPOS+3.344*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+5*X2 & " Y" & YPOS+3.344*Y1+5*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Largo=6.687
+    case  17 'U
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  18 'I
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.247*X1+10*X2 & " Y" & YPOS+3.247*Y1+10*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.623*X1+10*X2 & " Y" & YPOS+1.623*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.623*X1+0*X2 & " Y" & YPOS+1.623*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.247*X1+0*X2 & " Y" & YPOS+3.247*Y1+0*Y2
+      Largo=3.247
+    case  19 'O
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Largo=6.687
+    case  20 'P
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  21 'A
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.111*X1+3.298*X2 & " Y" & YPOS+1.111*Y1+3.298*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.573*X1+3.298*X2 & " Y" & YPOS+5.573*Y1+3.298*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+-0.001*X1+-0.03*X2 & " Y" & YPOS+-0.001*Y1+-0.03*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.342*X1+9.97*X2 & " Y" & YPOS+3.342*Y1+9.97*Y2
+      Code "G01 X" & XPOS+6.686*X1+-0.03*X2 & " Y" & YPOS+6.686*Y1+-0.03*Y2
+      Largo=6.686
+    case  22 'S
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Largo=6.687
+    case  23 'D
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.61*X1+10*X2 & " Y" & YPOS+1.61*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.61*X1+0*X2 & " Y" & YPOS+1.61*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  24 'F
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.394*X1+5*X2 & " Y" & YPOS+3.394*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  25 'G
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+5.03*X1+5*X2 & " Y" & YPOS+5.03*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+5*X2 & " Y" & YPOS+6.687*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Largo=6.687
+    case  26 ' H
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+5*X2 & " Y" & YPOS+6.687*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    case  27 'J
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Largo=6.687
+    case  28 'K
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.85*X1+5*X2 & " Y" & YPOS+1.85*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.85*X1+5*X2 & " Y" & YPOS+1.85*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  29 'L
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    case  30 'Ñ
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+8.309*X2 & " Y" & YPOS+0*Y1+8.309*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.016*X1+10*X2 & " Y" & YPOS+5.016*Y1+10*Y2
+      Largo=6.687
+    case  31 'Z
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Largo=6.687
+    case  32 'X
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  33 'C
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+1.701*X1+0*X2 & " Y" & YPOS+1.701*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.684*X2 & " Y" & YPOS+0*Y1+1.684*Y2
+      Code "G01 X" & XPOS+0*X1+8.316*X2 & " Y" & YPOS+0*Y1+8.316*Y2
+      Code "G01 X" & XPOS+1.701*X1+10*X2 & " Y" & YPOS+1.701*Y1+10*Y2
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Largo=6.687
+    case  34 'V
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Largo=6.687
+    case  35 'B
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.6*X1+5*X2 & " Y" & YPOS+1.6*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.6*X1+10*X2 & " Y" & YPOS+1.6*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.6*X1+0*X2 & " Y" & YPOS+1.6*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.986*X1+10*X2 & " Y" & YPOS+4.986*Y1+10*Y2
+      Code "G01 X" & XPOS+6.687*X1+8.316*X2 & " Y" & YPOS+6.687*Y1+8.316*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.759*X2 & " Y" & YPOS+6.687*Y1+6.759*Y2
+      Code "G01 X" & XPOS+4.91*X1+5*X2 & " Y" & YPOS+4.91*Y1+5*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.241*X2 & " Y" & YPOS+6.687*Y1+3.241*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.684*X2 & " Y" & YPOS+6.687*Y1+1.684*Y2
+      Code "G01 X" & XPOS+4.986*X1+0*X2 & " Y" & YPOS+4.986*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  36 'N
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  37 'M
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G01 X" & XPOS+3.344*X1+3.657*X2 & " Y" & YPOS+3.344*Y1+3.657*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    case  38 '+
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+5*X2 & " Y" & YPOS+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.646*X1+5*X2 & " Y" & YPOS+6.646*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.344*X1+8.345*X2 & " Y" & YPOS+3.344*Y1+8.345*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+1.722*X2 & " Y" & YPOS+3.344*Y1+1.722*Y2
+      Largo=6.686
+    case  39 '-
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+5*X2 & " Y" & YPOS+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.646*X1+5*X2 & " Y" & YPOS+6.646*Y1+5*Y2
+      Largo=6.687
+    case  40 'space
+      Largo=6.687
+    case 41 'q
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+-3.311*X2 & " Y" & YPOS+6.687*Y1+-3.311*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Largo=6.687
+    Case 42 'w
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.672*X1+0*X2 & " Y" & YPOS+1.672*Y1+0*Y2
+      Code "G01 X" & XPOS+3.344*X1+6.662*X2 & " Y" & YPOS+3.344*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.015*X1+0*X2 & " Y" & YPOS+5.015*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 43 'e
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.856*X1+3.331*X2 & " Y" & YPOS+4.856*Y1+3.331*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G01 X" & XPOS+4.856*X1+0*X2 & " Y" & YPOS+4.856*Y1+0*Y2
+      Largo=6.687
+    Case 44 'r
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.331*X1+6.662*X2 & " Y" & YPOS+3.331*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Largo=6.687
+    Case 45 't
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.344*X1+10*X2 & " Y" & YPOS+3.344*Y1+10*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+1.844*X2 & " Y" & YPOS+3.344*Y1+1.844*Y2
+      Code "G01 X" & XPOS+5.187*X1+0*X2 & " Y" & YPOS+5.187*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.5*X2 & " Y" & YPOS+6.687*Y1+1.5*Y2
+      Largo=6.687
+    Case 46 'y
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+-3.311*X2 & " Y" & YPOS+0*Y1+-3.311*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.682*X1+-3.311*X2 & " Y" & YPOS+1.682*Y1+-3.311*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 47 'u
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+3.331*X2 & " Y" & YPOS+6.687*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.687*X1+0*X2 & " Y" & YPOS+3.687*Y1+0*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Largo=6.687
+    Case 48 'i
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+6.652*X2 & " Y" & YPOS+0*Y1+6.652*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+8.36*X2 & " Y" & YPOS+0*Y1+8.36*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Largo=0
+    Case 49 'o
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.187*X1+0*X2 & " Y" & YPOS+5.187*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.5*X2 & " Y" & YPOS+6.687*Y1+1.5*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Largo=6.687
+    Case 50 'p
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+-3.311*X2 & " Y" & YPOS+0*Y1+-3.311*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.187*X1+0*X2 & " Y" & YPOS+5.187*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.5*X2 & " Y" & YPOS+6.687*Y1+1.5*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Largo=6.687
+    Case 51 'a
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+5.187*X1+1.5*X2 & " Y" & YPOS+5.187*Y1+1.5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.687*X1+0*X2 & " Y" & YPOS+3.687*Y1+0*Y2
+      Code "G01 X" & XPOS+5.187*X1+1.5*X2 & " Y" & YPOS+5.187*Y1+1.5*Y2
+      Code "G01 X" & XPOS+5.187*X1+5.162*X2 & " Y" & YPOS+5.187*Y1+5.162*Y2
+      Code "G01 X" & XPOS+3.687*X1+6.662*X2 & " Y" & YPOS+3.687*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Largo=6.687
+    Case 52 's
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+1.831*X1+3.331*X2 & " Y" & YPOS+1.831*Y1+3.331*Y2
+      Code "G01 X" & XPOS+4.856*X1+3.331*X2 & " Y" & YPOS+4.856*Y1+3.331*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.5*X2 & " Y" & YPOS+6.687*Y1+1.5*Y2
+      Code "G01 X" & XPOS+5.187*X1+0*X2 & " Y" & YPOS+5.187*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Largo=6.687
+    Case 53 'd
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+10*X2 & " Y" & YPOS+6.687*Y1+10*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.687*X1+0*X2 & " Y" & YPOS+3.687*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+3.331*X2 & " Y" & YPOS+6.687*Y1+3.331*Y2
+      Code "G01 X" & XPOS+3.687*X1+6.662*X2 & " Y" & YPOS+3.687*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Largo=6.687
+    Case 54 'f
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+5*X2 & " Y" & YPOS+0*Y1+5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+4.856*X1+5*X2 & " Y" & YPOS+4.856*Y1+5*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+8.5*X2 & " Y" & YPOS+6.687*Y1+8.5*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.187*X1+10*X2 & " Y" & YPOS+5.187*Y1+10*Y2
+      Code "G01 X" & XPOS+3*X1+10*X2 & " Y" & YPOS+3*Y1+10*Y2
+      Code "G01 X" & XPOS+1.5*X1+8.5*X2 & " Y" & YPOS+1.5*Y1+8.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Largo=6.687
+    Case 55 'g
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+-1.838*X2 & " Y" & YPOS+0*Y1+-1.838*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.5*X1+-3.338*X2 & " Y" & YPOS+1.5*Y1+-3.338*Y2
+      Code "G01 X" & XPOS+5.187*X1+-3.338*X2 & " Y" & YPOS+5.187*Y1+-3.338*Y2
+      Code "G01 X" & XPOS+6.687*X1+-1.838*X2 & " Y" & YPOS+6.687*Y1+-1.838*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    Case 56 'h
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3*X1+6.662*X2 & " Y" & YPOS+3*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    Case 57 'j
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+5.187*X1+8.398*X2 & " Y" & YPOS+5.187*Y1+8.398*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+5.187*X1+10.037*X2 & " Y" & YPOS+5.187*Y1+10.037*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+-1.811*X2 & " Y" & YPOS+0*Y1+-1.811*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.5*X1+-3.311*X2 & " Y" & YPOS+1.5*Y1+-3.311*Y2
+      Code "G01 X" & XPOS+3.687*X1+-3.311*X2 & " Y" & YPOS+3.687*Y1+-3.311*Y2
+      Code "G01 X" & XPOS+5.187*X1+-1.811*X2 & " Y" & YPOS+5.187*Y1+-1.811*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.689*X2 & " Y" & YPOS+5.187*Y1+6.689*Y2
+      Largo=5.187
+    Case 58 'k
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.687*X1+3.331*X2 & " Y" & YPOS+3.687*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.687*X1+3.331*X2 & " Y" & YPOS+3.687*Y1+3.331*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 59 'l
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+1.684*X1+0*X2 & " Y" & YPOS+1.684*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+1.869*X2 & " Y" & YPOS+0*Y1+1.869*Y2
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Largo=1.684
+    Case 60 'ñ
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3*X1+6.662*X2 & " Y" & YPOS+3*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+-0.011*X1+8.374*X2 & " Y" & YPOS+-0.011*Y1+8.374*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.64*X1+10.059*X2 & " Y" & YPOS+1.64*Y1+10.059*Y2
+      Code "G01 X" & XPOS+4.988*X1+8.398*X2 & " Y" & YPOS+4.988*Y1+8.398*Y2
+      Code "G01 X" & XPOS+6.65*X1+10.059*X2 & " Y" & YPOS+6.65*Y1+10.059*Y2
+      Largo=6.687
+    Case 61 'z
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    Case 62 'x
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 63 'c
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+1.5*X1+0*X2 & " Y" & YPOS+1.5*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.5*X2 & " Y" & YPOS+0*Y1+1.5*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 64 'v
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+0*X2 & " Y" & YPOS+3.344*Y1+0*Y2
+      Code "G01 X" & XPOS+6.687*X1+6.662*X2 & " Y" & YPOS+6.687*Y1+6.662*Y2
+      Largo=6.687
+    Case 65 'b
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+10*X2 & " Y" & YPOS+0*Y1+10*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3*X1+6.662*X2 & " Y" & YPOS+3*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+6.687*X1+1.5*X2 & " Y" & YPOS+6.687*Y1+1.5*Y2
+      Code "G01 X" & XPOS+5.187*X1+0*X2 & " Y" & YPOS+5.187*Y1+0*Y2
+      Code "G01 X" & XPOS+3*X1+0*X2 & " Y" & YPOS+3*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Largo=6.687
+    Case 66 'n
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+3.331*X2 & " Y" & YPOS+0*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3*X1+6.662*X2 & " Y" & YPOS+3*Y1+6.662*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Largo=6.687
+    Case 67 'm
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+0*X1+6.662*X2 & " Y" & YPOS+0*Y1+6.662*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+3.344*X1+3.331*X2 & " Y" & YPOS+3.344*Y1+3.331*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+3.344*X1+5.162*X2 & " Y" & YPOS+3.344*Y1+5.162*Y2
+      Code "G01 X" & XPOS+1.5*X1+6.662*X2 & " Y" & YPOS+1.5*Y1+6.662*Y2
+      Code "G01 X" & XPOS+0*X1+5.162*X2 & " Y" & YPOS+0*Y1+5.162*Y2
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+6.687*X1+0*X2 & " Y" & YPOS+6.687*Y1+0*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+6.687*X1+5.162*X2 & " Y" & YPOS+6.687*Y1+5.162*Y2
+      Code "G01 X" & XPOS+5.187*X1+6.662*X2 & " Y" & YPOS+5.187*Y1+6.662*Y2
+      Code "G01 X" & XPOS+3.344*X1+5.162*X2 & " Y" & YPOS+3.344*Y1+5.162*Y2
+      Largo=6.687
+    Case 68 'coma
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS+-1.673*X1+-1.622*X2 & " Y" & YPOS+-1.673*Y1+-1.622*Y2
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0*X2 & " Y" & YPOS+0*Y1+0*Y2
+      Code "G01 X" & XPOS+0*X1+1.721*X2 & " Y" & YPOS+0*Y1+1.721*Y2
+      Largo=0
+    Case 69 'Punto
+      Code "G00 Z" & Rapid_dis
+      Code "G00 X" & XPOS & " Y" & YPOS
+      Code "G00 Z" & Corte
+      Code "G01 X" & XPOS+0*X1+0.104*X2 & " Y" & YPOS+0*Y1+0.104*Y2
+      Largo=0
+  End Select
+'=== Actaliza DRO'S ===
+  XPOS = XPOS + (Largo + 3.268 * Porcentaje / 100) * X1 
+  YPOS = YPOS + (Largo + 3.268 * Porcentaje / 100) * Y1 
+  Code "G00 Z" & Rapid_dis
+'  Code "G00 X" & XPOS & " Y" & YPOS
+
+Next
+Call SetUserDRO(1072, XPOS)
+Call SetUserDRO(1073, YPOS)
+Code "G00 X" & XPOS & " Y" & YPOS
+'Code "M2"
+Code"M30"
+
+CloseTeachFile()
+call LoadStandardLayout()
+call LoadTeachFile()

@@ -27,7 +27,6 @@ Else
 			End If
 		End If
 End If
-
-Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+'Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
 
 Exit Sub

@@ -67,8 +67,7 @@ If checktool = 0 Then
 Else
 	Message "ATC Setup - Error! Tool T" & NTS & " is already loaded in rack!"
 End If
-
-Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
+'Call RunScript("ScreenSetMacros\" & GetActiveScreenSetName() & "\" & "Custom\Scripts\checkslots")
 
 Exit Sub     
 

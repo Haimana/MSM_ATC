@@ -1,0 +1,1 @@
+settimer(4)If getoemdro(39) <> getrpm() Then	code ("G4 P60") 	While IsMoving()      	Sleep 50     	Wend 	sleep 50End If	'message gettimer(4)'sleep 50If gettimer(4) > 59 Then 	DoOEMButton(1021)  	Exit SubEnd If  
