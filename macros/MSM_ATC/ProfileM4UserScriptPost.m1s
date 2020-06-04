@@ -1,0 +1,8 @@
+While Not IsActive(INPUT1)
+	Message "Input 1 Not Active"
+	Code "G4 P0.1"
+	Sleep(100)
+Wend
+
+	Message "M4 Started"
+	Sleep(50)
