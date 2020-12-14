@@ -1,0 +1,30 @@
+ ///////////////Configuration Check Facility/////////////////////// 
+
+ Any obvious errors are checked by this facility, passing does not mean 
+ you have no errors, but as more error possibilities are found, 
+ more checks will be added to this facility.
+ Currently, the most frequenct tech-support errors are checked for.  
+
+ ///////////////LIMIT & HOMING CHECK/////////////////////// 
+
+No Errors Found! 
+ ////////////////////// End of Homing and Limits Check /////////////////////////////////// 
+
+
+ ///////////////OUTPUT Signals Check/////////////////////// 
+
+ No port/pin errors found in output signals. 
+
+ ///////////////End of OUTPUT Signals Check/////////////////////// 
+
+ //////////////// Digitising Probe ///////////////////////// 
+ /////////End of Probe Check /////////////////////!. 
+
+ /////////Motor Settings - Enabled Motors only are Checked/////////////////////!. 
+
+ /////////Motor Settings - End of Motor Checks/////////////////////!. 
+
+ Checkup complete , please check any errors listed.  
+
+ Thank you for checking your Settings.....  
+
