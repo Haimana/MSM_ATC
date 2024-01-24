@@ -1,5 +1,5 @@
 ## WORK IN PROGRESS - Use on your risk!
-##  === INCOMPLETE DOCUMENTATION ===
+##  = INCOMPLETE DOCUMENTATION =
 
 # Installation of MSM_ATC Screenset
 
