@@ -1,5 +1,17 @@
 ## WORK IN PROGRESS - Use on your risk!
-##  = INCOMPLETE DOCUMENTATION =
+##   = INCOMPLETE DOCUMENTATION =
+
+# ATC scripts for MachStdMill screenset
+### Technical support for the MachStdMill product is no longer available.
+
+## Description of MSM_ATC
+ - MSM_ATC can handle a rack with 10 tool holders and up to 250 tools
+ - Each tool holder can be loaded with any tool (1-250)
+ - If tool not in the rack will be manual loaded from Tool Change Position
+ - If free slots available, current tool will be unloaded in first free slot
+ - If no free slots available, current tool will be unloaded at TCP
+ - ... (Incomplete description)...
+
 
 # Installation of MSM_ATC Screenset
 
